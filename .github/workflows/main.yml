@@ -81,8 +81,6 @@ jobs:
 
             export PATH="$PATH:/root/.dotnet/tools"
 
-            export PATH="$PATH:/dotNetCode/sonar-scanner-msbuild-5.9.0.57893-netcoreapp3.0"
-
 
             echo "Starting scanning the project"
 
