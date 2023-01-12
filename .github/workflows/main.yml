@@ -93,7 +93,7 @@ jobs:
 
 
           echo "Starting scanning the project"
-          dotnet tool install --global dotnet-sonarscanner
+      
           dotnet sonarscanner begin /k:"dlh-dev-demoapp"
           /d:sonar.host.url="https://sonarqube-sonarqube-sonarqube.apps.pesdev.hcscloud.net/"
           /d:sonar.login="sqa_bf1c123094ade02d1be8795da4e9921188acc5b3" /d:sonar.verbose=true
