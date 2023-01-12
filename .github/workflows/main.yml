@@ -67,3 +67,40 @@ jobs:
       shell: bash
       run: |
         echo "${{ toJSON(steps.install-runners.outputs) }}"
+  build: 
+    name: Self Hosted Sonar scan
+    
+    runs-on: [ self-hosted, demo-runner ]                       # Use the same labels we gave the runner above    
+    needs: fetch                           # Wait until the install-runner job above completes                
+
+    steps:
+    - name: Checkout git repository
+      id: checkout1
+      uses: actions/checkout@v3               
+    - name: dotnet scanner                               # Checkout a sample Java project to build & test on runner
+      run: |                                                   # https://github.com/redhat-actions/quarkus-quickstarts/tree/master/getting-started#readme
+          #!/usr/bin/env bash
+
+
+          export PATH="$PATH:/root/.dotnet/tools"
+
+
+          echo "Starting scanning the project"
+
+          dotnet sonarscanner begin /k:"AspNetCoreWebApi6"
+          /d:sonar.host.url="https://sonarqube-sonarqube-sonarqube.apps.pesdev.hcscloud.net/"
+          /d:sonar.login="sqa_bf1c123094ade02d1be8795da4e9921188acc5b3" /d:sonar.verbose=true
+          /d:sonar.log.level="TRACE"
+          /d:sonar.cs.vscoveragexml.reportsPaths="*.coveragexml"
+          /d:sonar.cs.vstest.reportsPaths="*.trx"
+
+
+          echo "Building the project"
+
+          dotnet build AspNetCoreWebApi6.sln
+
+
+          echo "Finishing scanning the project"
+
+          dotnet sonarscanner end
+          /d:sonar.login="sqa_bf1c123094ade02d1be8795da4e9921188acc5b3"
