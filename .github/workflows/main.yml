@@ -78,9 +78,12 @@ jobs:
       run: |
           export PATH="$PATH:/root/.dotnet/tools"
           export PATH="$PATH:/home/runner/sonar-scanner-msbuild-5.10.0.59947-netcoreapp3.0"
+          echo $PATH
     - name: Checkout git repository
       id: checkout1
-      uses: actions/checkout@v3               
+      uses: actions/checkout@v3
+    - name: echo path
+      run: echo $PATH
     - name: dotnet scanner                               # Checkout a sample Java project to build & test on runner
       run: |                                                   # https://github.com/redhat-actions/quarkus-quickstarts/tree/master/getting-started#readme
           #!/usr/bin/env bash
