@@ -60,7 +60,7 @@ jobs:
       id: install-runners 
       with: 
         github_pat: ${{ secrets.PAT }}     
-        runner_image: quay.io/fattah_antar/dotnetsdkmodified:6.0    # Default: quay.io/redhat-github-actions/runner [https://quay.io/organization/redhat-github-actions]
+        runner_image: quay.io/redhat-github-actions/java-runner-1    # Default: quay.io/redhat-github-actions/runner [https://quay.io/organization/redhat-github-actions]
         runner_labels: demo-runner                                    # Options: ./node-runner-14 ./java-runner-11 ./buildah-runner
         runner_replicas: 1
     - name: Echo outputs
