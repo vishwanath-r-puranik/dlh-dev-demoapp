@@ -74,6 +74,10 @@ jobs:
     needs: fetch                           # Wait until the install-runner job above completes                
 
     steps:
+    - name: set env variables
+      run: |
+          export PATH="$PATH:/root/.dotnet/tools"
+          export PATH="$PATH:/home/runner/sonar-scanner-msbuild-5.10.0.59947-netcoreapp3.0"
     - name: Checkout git repository
       id: checkout1
       uses: actions/checkout@v3               
