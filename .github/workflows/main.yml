@@ -42,6 +42,18 @@ jobs:
     #environment: 
     #  name: Dev
     steps:
+    - name: Install OpenShift client
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.eOPENSHIFT_SERVER }}
+        openshift_token: ${{ env.eOPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+        
     - name: Checkout git repository
       id: checkout
       uses: actions/checkout@v3
