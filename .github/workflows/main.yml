@@ -54,9 +54,6 @@ jobs:
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         
-    - name: Checkout git repository
-      id: checkout
-      uses: actions/checkout@v3
 
     - name: Install self hosted runners for actions-demo-app repository
       uses: redhat-actions/openshift-actions-runner-installer@v1
