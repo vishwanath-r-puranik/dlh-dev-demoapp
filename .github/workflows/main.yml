@@ -31,7 +31,7 @@ env:
   eOPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   eOPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: "dlh-dev"
-  HELM_RELEASE_NAME: ${{ github.repository }}-runner
+  HELM_RELEASE_NAME: dlh-dev-demoapp-runner
 
 jobs:
   fetch:
