@@ -31,6 +31,7 @@ env:
   eOPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   eOPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: "dlh-dev"
+  HELM_RELEASE_NAME: ${{ github.repository }}-runner
 
 jobs:
   fetch:
@@ -89,7 +90,7 @@ jobs:
 
           echo "Starting scanning the project"
 
-          dotnet sonarscanner begin /k:"dlh-dev-demoapp" /d:sonar.host.url="https://sonarqube-sonarqube-sonarqube.apps.pesdev.hcscloud.net/" /d:sonar.login="sqa_bf1c123094ade02d1be8795da4e9921188acc5b3" /d:sonar.verbose=true /d:sonar.log.level="TRACE" /d:sonar.cs.vscoveragexml.reportsPaths="*.coveragexml" /d:sonar.cs.vstest.reportsPaths="*.trx"
+          dotnet sonarscanner begin /k:"dlh-dev-demoapp" /d:sonar.host.url="https://sonarqube-sonarqube-dlh-dev.apps.os.gov.ab.ca" /d:sonar.login="sqa_0836503265390cb7b39bfefc7921f290e67f4e84" /d:sonar.verbose=true /d:sonar.log.level="TRACE" /d:sonar.cs.vscoveragexml.reportsPaths="*.coveragexml" /d:sonar.cs.vstest.reportsPaths="*.trx"
 
 
           echo "Building the project"
@@ -99,4 +100,30 @@ jobs:
 
           echo "Finishing scanning the project"
 
-          dotnet sonarscanner end /d:sonar.login="sqa_bf1c123094ade02d1be8795da4e9921188acc5b3"
+          dotnet sonarscanner end /d:sonar.login="sqa_0836503265390cb7b39bfefc7921f290e67f4e84"
+
+
+  uninstall-self-hosted-runner: 
+    needs: [build]
+    name: Uninstall Self-Hosted Runners present in OpenShift
+    runs-on: ubuntu-20.04 
+
+    steps: 
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.eOPENSHIFT_SERVER }}
+        openshift_token: ${{ env.eOPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+
+    - run: helm ls
+
+    - run: |
+          if helm status ${{ env.HELM_RELEASE_NAME }}; then
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "Release ${{ env.HELM_RELEASE_NAME }} not found"
+          fi
+    - run: helm uninstall ${{ env.HELM_RELEASE_NAME }}
+      if: env.RELEASE_EXISTS == 'true'
